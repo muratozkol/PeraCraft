@@ -83,7 +83,7 @@ Peracraft, modern web teknolojileri kullanılarak geliştirilmiş kapsamlı bir 
    ```
 4. Tarayıcınızda açın:
    ```
-   http://localhost:<port>
+   http://localhost:5152
    ```
 
 ---
@@ -122,7 +122,8 @@ Bu proje [MIT Lisansı](LICENSE) altında lisanslanmıştır.
 ---
 
 ## 👥 Katkıda Bulunanlar
-[Katkıda bulunanların isimleri]
+[MURAT ÖZKOL]
+[ALİ ŞEYHO]
 
 ---
 
