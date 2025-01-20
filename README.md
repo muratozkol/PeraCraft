@@ -1,4 +1,4 @@
-# Peracraft E-Ticaret Projesi - Backend
+# Peracraft E-Ticaret Projesi
 
 ## 📋 Proje Özeti
 Peracraft, modern web teknolojileri kullanılarak geliştirilmiş kapsamlı bir e-ticaret platformudur. Kullanıcılar için kolay ve güvenli bir alışveriş deneyimi sunarken, yöneticiler için etkili bir yönetim paneli sağlar.
