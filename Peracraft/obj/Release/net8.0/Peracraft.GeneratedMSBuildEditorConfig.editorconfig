@@ -1,0 +1,123 @@
+is_global = true
+build_property.TargetFramework = net8.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.RootNamespace = Peracraft
+build_property.RootNamespace = Peracraft
+build_property.ProjectDir = C:\Users\MURAT\Desktop\Peracraft\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.RazorLangVersion = 8.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = C:\Users\MURAT\Desktop\Peracraft
+build_property._RazorSourceGeneratorDebug = 
+
+[C:/Users/MURAT/Desktop/Peracraft/Views/Admin/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MURAT/Desktop/Peracraft/Views/Admin/SiparisDetay.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cU2lwYXJpc0RldGF5LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MURAT/Desktop/Peracraft/Views/Admin/Siparisler.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cU2lwYXJpc2xlci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MURAT/Desktop/Peracraft/Views/Admin/Urunler.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cVXJ1bmxlci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MURAT/Desktop/Peracraft/Views/Adres/Duzenle.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRyZXNcRHV6ZW5sZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MURAT/Desktop/Peracraft/Views/Adres/Ekle.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRyZXNcRWtsZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MURAT/Desktop/Peracraft/Views/Adres/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRyZXNcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MURAT/Desktop/Peracraft/Views/Cart/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2FydFxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MURAT/Desktop/Peracraft/Views/Hesap/Giris.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSGVzYXBcR2lyaXMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MURAT/Desktop/Peracraft/Views/Hesap/Profil.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSGVzYXBcUHJvZmlsLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MURAT/Desktop/Peracraft/Views/Hesap/Profilim.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSGVzYXBcUHJvZmlsaW0uY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MURAT/Desktop/Peracraft/Views/Hesap/Siparislerim.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSGVzYXBcU2lwYXJpc2xlcmltLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MURAT/Desktop/Peracraft/Views/Home/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MURAT/Desktop/Peracraft/Views/Home/Privacy.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MURAT/Desktop/Peracraft/Views/Kategori/Detay.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcS2F0ZWdvcmlcRGV0YXkuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MURAT/Desktop/Peracraft/Views/Sepet/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2VwZXRcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MURAT/Desktop/Peracraft/Views/Sepet/SiparisOlustur.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2VwZXRcU2lwYXJpc09sdXN0dXIuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MURAT/Desktop/Peracraft/Views/Sepet/SiparisVer.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2VwZXRcU2lwYXJpc1Zlci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MURAT/Desktop/Peracraft/Views/Shared/Components/UserProfile/Anonymous.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXENvbXBvbmVudHNcVXNlclByb2ZpbGVcQW5vbnltb3VzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MURAT/Desktop/Peracraft/Views/Shared/Components/UserProfile/Default.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXENvbXBvbmVudHNcVXNlclByb2ZpbGVcRGVmYXVsdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MURAT/Desktop/Peracraft/Views/Shared/Error.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MURAT/Desktop/Peracraft/Views/Shared/_AdminLayout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9BZG1pbkxheW91dC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MURAT/Desktop/Peracraft/Views/Shared/_ValidationScriptsPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MURAT/Desktop/Peracraft/Views/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MURAT/Desktop/Peracraft/Views/_ViewStart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/MURAT/Desktop/Peracraft/Views/Shared/_Layout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = b-mtyoyctisv
