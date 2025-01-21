@@ -32,23 +32,15 @@ Peracraft, modern web teknolojileri kullanılarak geliştirilmiş kapsamlı bir 
 ### Backend Teknolojileri
 - **.NET 6.0**: Modern ve hızlı web uygulamaları için geliştirme platformu.
 - **ASP.NET Core MVC**: Model-View-Controller mimarisi.
-- **Entity Framework Core**: ORM (Object-Relational Mapping) aracı.
+- **Entity Framework Core**
 - **MySQL**: Veritabanı yönetim sistemi.
-- **LINQ**: Veri sorgulama ve manipülasyon.
-- **C# 10**: Programlama dili.
+- **C#**: Programlama dili.
 
 ### Frontend Teknolojileri
 - **HTML5/CSS3**: Sayfa yapısı ve stillendirme.
 - **JavaScript/jQuery**: Dinamik kullanıcı deneyimi.
 - **Bootstrap 5**: Responsive tasarım framework'ü.
 - **AJAX**: Asenkron veri transferi.
-- **Font Awesome**: İkon kütüphanesi.
-
-### Güvenlik
-- **Session Yönetimi**: Güvenli oturum işlemleri.
-- **MD5 Şifreleme**: Parola şifreleme.
-- **Anti-Forgery Token**: CSRF koruması.
-- **Veri Doğrulama**: Veri bütünlüğünü sağlama.
 
 ---
 
@@ -88,16 +80,6 @@ Peracraft, modern web teknolojileri kullanılarak geliştirilmiş kapsamlı bir 
 
 ---
 
-## 🛡️ Güvenlik Önlemleri
-- Şifre şifreleme (MD5)
-- CSRF koruması
-- Session yönetimi
-- Veri doğrulama
-- XSS koruması
-- SQL Injection koruması
-
----
-
 ## 📦 Proje Yapısı
 - **Models**: Veri modelleri.
 - **Controllers**: Uygulama mantığı.
@@ -108,11 +90,66 @@ Peracraft, modern web teknolojileri kullanılarak geliştirilmiş kapsamlı bir 
 
 ## 🌟 Özellikler ve Yetenekler
 - Responsive tasarım.
-- SEO dostu URL yapısı.
 - Hızlı sayfa yükleme.
 - Kullanıcı dostu yönetim paneli.
 - Güvenli ödeme sistemi.
 - Detaylı raporlama.
+
+---
+
+## 📸 Proje Görselleri
+
+### 1. Adım: Ana Sayfa
+![1. Adım Görseli](screens/1.png)
+_Kullanıcıyı Parallax Efektiyle Karşılayan Modern Bir Ana Sayfa._
+
+### 2. Adım: Kayıt ve Giriş
+![2. Adım Görseli](screens/2.png)
+_Kullanıcı Sepetine Ürün Yükleyebbilmek İçin Kayıt Olur ve Giriş Ekranına Yönlendirir._
+
+### 3. Adım: Ürün Kartları
+![3. Adım Görseli](screens/3.png)
+_Ana Sayfada Ürünler Hakkında Detaylı Bilgi Alabilmesi Adına Hover Özelliği Olarak Hızlı Bakış Atabilir._
+
+### 4. Adım: Hızlı Bakış
+![4. Adım Görseli](screens/4.png)
+_Hızlı Bakış Ekranında Detaylı Bilgi Aktarımı Yapılır._
+
+### 5. Adım: Sepete Ekleme
+![5. Adım Görseli](screens/5.png)
+_Müşteri İstediği Ürün Adedi Kadar Ekleme Yapabilir ve Sepete Eklediğinde Onay Bildirimi Gönderilir._
+
+### 6. Adım: Sepet İnceleme
+![6. Adım Görseli](screens/6.png)
+_Müşteri Sepetini İnceleyip Kontrol Edebilir ve Sepetim Butonundaki Badge ile Ürün Sayısını Görebilir._
+
+### 7. Adım: Sipariş Onayı
+![7. Adım Görseli](screens/7.png)
+_Kullanıcı Gerekli Bilgileri Girerek Siparişini Onaya Gönderir._
+
+### 8. Adım: Sipariş Onayı(Devamı)
+![8. Adım Görseli](screens/8.png)
+_Kullanıcı Özel Tasarım Ürünler İçin Ödeme Bilgilerini ve Fotoğraflarını Gönderir._
+
+### 9. Adım Sipariş Durumu Kontrol
+![9. Adım Görseli](screens/9.png)
+_Kullanıcı Onayladığı Siparişin Durumunu Görebilir_
+
+### 10. Adım: Profil Yönetimi
+![10. Adım Görseli](screens/10.png)
+_Kullanıcı Profil Fotoğrafı Ekleme, Şifre Değişikliği Gibi İşlemleri Yapar._
+
+### 11. Adım: Profil Bilgileri Güncelleme
+![11. Adım Görseli](screens/11.png)
+_Güncellenen Bilgiler Onaylanır._
+
+### 12. Adım: Admin Paneli
+![12. Adım Görseli](screens/12.png)
+_Admin Kullanıcılardan Gelen Tüm Siparişleri Detayları ile Birlikte Görebilir ve Onaylar._
+
+### 13. Adım: Sipariş Süreci Takip(Müşteri Tarafı)
+![13. Adım Görseli](screens/13.png)
+_Kullanıcının Siparişi Onaylandıysa Hazırlanıyor Olarak Görür, Onaylanmadıysa Reddediyor Olarak Görür._
 
 ---
 
@@ -122,11 +159,11 @@ Bu proje [MIT Lisansı](LICENSE) altında lisanslanmıştır.
 ---
 
 ## 👥 Katkıda Bulunanlar
-[MURAT ÖZKOL]
-[ALİ ŞEYHO]
+[MURAT ÖZKOL]  
+[ALİ ŞEYHO]  
 
 ---
 
 ## 📞 İletişim
-[İletişim bilgileri]
-
+[murattozkol@gmail.com]
+[ali2003seyho@gmail.com]
