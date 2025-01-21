@@ -4,6 +4,10 @@
 [MURAT ÖZKOL 132230111]  
 [ALİ ŞEYHO 132130115]  
 
+## 📞 İletişim
+[murattozkol@gmail.com] Murat Özkol
+[132130115@ogr.uludag.edu.tr] Ali Şeyho 
+
 ## 📋 Proje Özeti
 Peracraft, modern web teknolojileri kullanılarak geliştirilmiş kapsamlı bir e-ticaret platformudur. Kullanıcılar için kolay ve güvenli bir alışveriş deneyimi sunarken, yöneticiler için etkili bir yönetim paneli sağlar.
 
@@ -158,6 +162,4 @@ _Kullanıcının Siparişi Onaylandıysa Hazırlanıyor Olarak Görür, Onaylanm
 
 ---
 
-## 📞 İletişim
-[murattozkol@gmail.com]
-[ali2003seyho@gmail.com]
+
