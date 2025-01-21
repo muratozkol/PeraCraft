@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Peracraft Admin</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <style>
+        .admin-sidebar {
+            min-height: 100vh;
+            background-color: #1a1a1a;
+            padding: 20px 0;
+        }
+
+        .admin-sidebar .nav-link {
+            color: #fff;
+            padding: 10px 20px;
+            transition: all 0.3s;
+        }
+
+        .admin-sidebar .nav-link:hover,
+        .admin-sidebar .nav-link.active {
+            background-color: #333;
+        }
+
+        .admin-sidebar .nav-link i {
+            margin-right: 10px;
+        }
+
+        .admin-content {
+            padding: 20px;
+        }
+
+        .admin-header {
+            background-color: #2a2a2a;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .admin-header h1 {
+            color: #fff;
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .status-badge {
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .status-badge.beklemede {
+            background-color: #ffd700;
+            color: #000;
+        }
+
+        .status-badge.onaylandı {
+            background-color: #28a745;
+            color: #fff;
+        }
+
+        .status-badge.reddedildi {
+            background-color: #dc3545;
+            color: #fff;
+        }
+
+        .btn-group .btn {
+            margin: 0 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-2 admin-sidebar">
+                <div class="text-center mb-4">
+                    <h4 class="text-white">Peracraft Admin</h4>
+                </div>
+                <nav class="nav flex-column">
+                    <a class="nav-link @(ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")" 
+                       href="@Url.Action("Index", "Admin")">
+                        <i class="fas fa-home"></i> Ana Sayfa
+                    </a>
+                    <a class="nav-link @(ViewContext.RouteData.Values["Action"]?.ToString() == "Siparisler" ? "active" : "")" 
+                       href="@Url.Action("Siparisler", "Admin")">
+                        <i class="fas fa-shopping-cart"></i> Siparişler
+                    </a>
+                    <a class="nav-link" href="@Url.Action("Index", "Home")">
+                        <i class="fas fa-arrow-left"></i> Siteye Dön
+                    </a>
+                </nav>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-10 admin-content">
+                <div class="admin-header">
+                    <h1>@ViewData["Title"]</h1>
+                </div>
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html> 

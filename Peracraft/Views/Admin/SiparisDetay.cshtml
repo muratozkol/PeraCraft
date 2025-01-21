@@ -1,0 +1,341 @@
+@model Peracraft.Models.Siparis
+
+@{
+    ViewData["Title"] = "Sipariş Detayı";
+    Layout = "_Layout";
+}
+
+<div class="container mt-5">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index")" class="text-decoration-none">Admin Paneli</a></li>
+            <li class="breadcrumb-item active">Sipariş Detayı</li>
+        </ol>
+    </nav>
+
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-gradient text-white py-3" style="background-color: #4e73df;">
+            <div class="d-flex justify-content-between align-items-center">
+                <h3 class="card-title mb-0 fw-bold">Sipariş #@Model.SiparisKodu</h3>
+                <div class="d-flex align-items-center gap-3">
+                    @if (Model.SiparisDurumu == "Beklemede")
+                    {
+                        <div class="btn-group">
+                            <button onclick="durumGuncelle(@Model.SiparisId, 'Onaylandı')" 
+                                    class="btn btn-success btn-sm">
+                                <i class="bi bi-check-lg me-1"></i>Onayla
+                            </button>
+                            <button onclick="durumGuncelle(@Model.SiparisId, 'İptal Edildi')" 
+                                    class="btn btn-danger btn-sm">
+                                <i class="bi bi-x-lg me-1"></i>Reddet
+                            </button>
+                        </div>
+                    }
+                    <div class="order-status-box @Model.SiparisDurumu.ToLower()">
+                        <i class="bi @(Model.SiparisDurumu == "Beklemede" ? "bi-hourglass-split" : 
+                                    Model.SiparisDurumu == "Onaylandı" ? "bi-box-seam" : 
+                                    Model.SiparisDurumu == "İptal Edildi" ? "bi-x-circle" : "bi-circle")"></i>
+                        <span>@(Model.SiparisDurumu == "Onaylandı" ? "Hazırlanıyor" : Model.SiparisDurumu)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body p-4">
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="card h-100 border-0 bg-light">
+                        <div class="card-body">
+                            <h4 class="card-title mb-4 text-primary fw-bold">
+                                <i class="bi bi-person-circle me-2"></i>Müşteri Bilgileri
+                            </h4>
+                            <div class="table-responsive">
+                                <table class="table table-borderless mb-0">
+                                    <tr>
+                                        <th class="text-muted" style="width: 150px;">Ad Soyad:</th>
+                                        <td class="fw-medium">@Model.Kullanici.Ad @Model.Kullanici.Soyad</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="text-muted">E-posta:</th>
+                                        <td class="fw-medium">@Model.Kullanici.Eposta</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="text-muted">Telefon:</th>
+                                        <td class="fw-medium">@Model.TeslimatTelefonu</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card h-100 border-0 bg-light">
+                        <div class="card-body">
+                            <h4 class="card-title mb-4 text-primary fw-bold">
+                                <i class="bi bi-box-seam me-2"></i>Sipariş Bilgileri
+                            </h4>
+                            <div class="table-responsive">
+                                <table class="table table-borderless mb-0">
+                                    <tr>
+                                        <th class="text-muted" style="width: 150px;">Sipariş Tarihi:</th>
+                                        <td class="fw-medium">@Model.SiparisTarihi.ToString("dd.MM.yyyy HH:mm")</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-4 border-0 bg-light">
+                <div class="card-body">
+                    <h4 class="card-title mb-4 text-primary fw-bold">
+                        <i class="bi bi-geo-alt me-2"></i>Teslimat Adresi
+                    </h4>
+                    <p class="mb-0 bg-white p-3 rounded text-dark">@Model.TeslimatAdresi</p>
+                </div>
+            </div>
+
+            @if (!string.IsNullOrEmpty(Model.SiparisNotu))
+            {
+                <div class="card mt-4 border-0 bg-light">
+                    <div class="card-body">
+                        <h4 class="card-title mb-4 text-primary fw-bold">
+                            <i class="bi bi-chat-left-text me-2"></i>Sipariş Notu
+                        </h4>
+                        <p class="mb-0 bg-white p-3 rounded">@Model.SiparisNotu</p>
+                    </div>
+                </div>
+            }
+
+            <div class="card mt-4 border-0 bg-light">
+                <div class="card-body">
+                    <h4 class="card-title mb-4 text-primary fw-bold">
+                        <i class="bi bi-cart-check me-2"></i>Sipariş Detayları
+                    </h4>
+                    <div class="table-responsive">
+                        <table class="table table-hover bg-white rounded">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Ürün</th>
+                                    <th class="text-center">Miktar</th>
+                                    <th class="text-end">Birim Fiyat</th>
+                                    <th class="text-end">Toplam</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var detay in Model.SiparisDetaylari)
+                                {
+                                    <tr>
+                                        <td class="fw-medium">@detay.Urun.UrunAdi</td>
+                                        <td class="text-center">@detay.Miktar</td>
+                                        <td class="text-end">@detay.BirimFiyat.ToString("C2")</td>
+                                        <td class="text-end">@((detay.BirimFiyat * detay.Miktar).ToString("C2"))</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            @if (Model.SiparisGorselleri != null && Model.SiparisGorselleri.Any())
+            {
+                <div class="card mt-4 border-0 bg-light">
+                    <div class="card-body">
+                        <h4 class="card-title mb-4 text-primary fw-bold">
+                            <i class="bi bi-images me-2"></i>Müşteri Görselleri
+                        </h4>
+                        <div class="row g-4">
+                            @foreach (var gorsel in Model.SiparisGorselleri)
+                            {
+                                <div class="col-lg-4 col-md-6">
+                                    <div class="card shadow-sm h-100">
+                                        <small class="text-muted p-2">@gorsel.DosyaYolu</small>
+                                        <a href="@gorsel.DosyaYolu" target="_blank" class="image-link">
+                                            <img src="@gorsel.DosyaYolu" class="card-img-top" alt="Sipariş Görseli">
+                                        </a>
+                                        <div class="card-footer bg-white text-muted small py-2">
+                                            <i class="bi bi-clock me-1"></i>
+                                            @gorsel.YuklenmeTarihi.ToString("dd.MM.yyyy HH:mm")
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="text-center mb-5">
+        <a href="@Url.Action("Index")" class="btn btn-secondary px-4">
+            <i class="bi bi-arrow-left me-2"></i>Siparişlere Dön
+        </a>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function durumGuncelle(siparisId, yeniDurum) {
+            if (!confirm('Sipariş durumunu "' + (yeniDurum === 'Onaylandı' ? 'Hazırlanıyor' : yeniDurum) + '" olarak güncellemek istediğinize emin misiniz?')) {
+                return;
+            }
+
+            $.post('/Admin/DurumGuncelle', { siparisId: siparisId, yeniDurum: yeniDurum }, function(response) {
+                if (response.success) {
+                    // Badge'i güncelle
+                    const statusBox = document.querySelector('.order-status-box');
+                    statusBox.className = 'order-status-box ' + yeniDurum.toLowerCase();
+                    
+                    // İkon ve metni güncelle
+                    const icon = statusBox.querySelector('i');
+                    icon.className = 'bi ' + (yeniDurum === 'Onaylandı' ? 'bi-box-seam' : 
+                                            yeniDurum === 'İptal Edildi' ? 'bi-x-circle' : 'bi-circle');
+                    statusBox.querySelector('span').textContent = yeniDurum === 'Onaylandı' ? 'Hazırlanıyor' : yeniDurum;
+                    
+                    // Butonları gizle
+                    document.querySelector('.btn-group')?.remove();
+                    
+                    // Bildirim göster
+                    alert('Sipariş durumu başarıyla güncellendi.');
+                } else {
+                    alert('Hata: ' + (response.message || 'Bir hata oluştu.'));
+                }
+            });
+        }
+    </script>
+}
+
+@section Styles {
+    <style>
+        body {
+            background-color: #f8f9fc;
+        }
+        .card {
+            border-radius: 0.5rem;
+        }
+        .table th {
+            font-weight: 600;
+            color: #4a5568;
+        }
+        .table td {
+            color: #2d3748;
+        }
+        .badge {
+            font-weight: 500;
+            padding: 0.5em 1em;
+        }
+        .card-img-top {
+            height: 250px;
+            object-fit: cover;
+            border-radius: 0.5rem 0.5rem 0 0;
+        }
+        .text-primary {
+            color: #4e73df !important;
+        }
+        .bg-gradient {
+            background: linear-gradient(45deg, #4e73df, #224abe);
+        }
+        .btn-secondary {
+            background-color: #858796;
+            border-color: #858796;
+        }
+        .btn-secondary:hover {
+            background-color: #717384;
+            border-color: #717384;
+        }
+        .order-status-box {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.25rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            font-size: 0.875rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            min-width: 140px;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .order-status-box i {
+            font-size: 1.1rem;
+        }
+
+        .order-status-box.beklemede {
+            background: linear-gradient(145deg, #fff9e6, #fff5d6);
+            color: #997404;
+            border: 1px solid #ffeeba;
+        }
+
+        .order-status-box.onaylandı {
+            background: linear-gradient(145deg, #e8f5e9, #c8e6c9);
+            color: #1b5e20;
+            border: 1px solid #a5d6a7;
+        }
+
+        .order-status-box.iptal.edildi {
+            background: linear-gradient(145deg, #ffebee, #ffcdd2);
+            color: #b71c1c;
+            border: 1px solid #ef9a9a;
+        }
+
+        .order-status-box.beklemede i {
+            animation: pulse 2s infinite;
+        }
+
+        @@keyframes pulse {
+            0% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .btn-group .btn {
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.75rem;
+            transition: all 0.2s ease;
+        }
+
+        .btn-group .btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn-group .btn i {
+            font-size: 1rem;
+        }
+
+        .image-link {
+            display: block;
+            position: relative;
+            overflow: hidden;
+            border-radius: 0.5rem 0.5rem 0 0;
+            height: 250px;
+        }
+
+        .image-link:hover img {
+            transform: scale(1.05);
+        }
+
+        .card-img-top {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 0.5rem 0.5rem 0 0;
+            transition: transform 0.3s ease;
+        }
+
+        .card {
+            overflow: hidden;
+        }
+    </style>
+} 

@@ -1,0 +1,151 @@
+@model List<Siparis>
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Sipariş Yönetimi";
+}
+
+<div class="admin-page">
+    <h2>Sipariş Yönetimi</h2>
+
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Sipariş No</th>
+                    <th>Müşteri</th>
+                    <th>Tarih</th>
+                    <th>Tutar</th>
+                    <th>Durum</th>
+                    <th>İşlemler</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var siparis in Model)
+                {
+                    <tr>
+                        <td>#@siparis.SiparisId</td>
+                        <td>@siparis.Kullanici.Ad @siparis.Kullanici.Soyad</td>
+                        <td>@siparis.SiparisTarihi.ToString("dd.MM.yyyy HH:mm")</td>
+                        <td>@siparis.ToplamTutar.ToString("C2")</td>
+                        <td>
+                            <span class="status-badge @siparis.SiparisDurumu.ToLower()">
+                                @siparis.SiparisDurumu
+                            </span>
+                        </td>
+                        <td>
+                            <div class="btn-group">
+                                <button class="btn btn-sm btn-info" onclick="siparisDetayGoster(@siparis.SiparisId)">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                @if (siparis.SiparisDurumu == "Beklemede")
+                                {
+                                    <button class="btn btn-sm btn-success" onclick="siparisDurumuGuncelle(@siparis.SiparisId, 'Onaylandı')">
+                                        <i class="fas fa-check"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-danger" onclick="siparisDurumuGuncelle(@siparis.SiparisId, 'Reddedildi')">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Sipariş Detay Modal -->
+<div class="modal fade" id="siparisDetayModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Sipariş Detayı</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <p><strong>Sipariş No:</strong> <span id="modalSiparisNo"></span></p>
+                        <p><strong>Müşteri:</strong> <span id="modalMusteriAdi"></span></p>
+                        <p><strong>Tarih:</strong> <span id="modalSiparisTarihi"></span></p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Teslimat Adresi:</strong> <span id="modalTeslimatAdresi"></span></p>
+                        <p><strong>Telefon:</strong> <span id="modalTeslimatTelefonu"></span></p>
+                        <p><strong>Sipariş Notu:</strong> <span id="modalSiparisNotu"></span></p>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Ürün</th>
+                                <th>Miktar</th>
+                                <th>Birim Fiyat</th>
+                                <th>Toplam</th>
+                            </tr>
+                        </thead>
+                        <tbody id="modalUrunlerTbody">
+                        </tbody>
+                    </table>
+                </div>
+                <div class="text-end">
+                    <h4>Toplam Tutar: <span id="modalToplamTutar"></span></h4>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function siparisDurumuGuncelle(siparisId, yeniDurum) {
+            if (confirm('Sipariş durumunu "' + yeniDurum + '" olarak güncellemek istediğinizden emin misiniz?')) {
+                $.post('/Admin/SiparisDurumuGuncelle', { siparisId: siparisId, yeniDurum: yeniDurum }, function(response) {
+                    if (response.success) {
+                        location.reload();
+                    } else {
+                        alert(response.message || 'Sipariş durumu güncellenirken bir hata oluştu.');
+                    }
+                });
+            }
+        }
+
+        function siparisDetayGoster(siparisId) {
+            $.get('/Admin/SiparisDetay', { siparisId: siparisId }, function(response) {
+                if (response.success) {
+                    var data = response.data;
+                    
+                    // Modal içeriğini doldur
+                    $('#modalSiparisNo').text('#' + data.siparisId);
+                    $('#modalMusteriAdi').text(data.musteriAdi);
+                    $('#modalSiparisTarihi').text(data.siparisTarihi);
+                    $('#modalTeslimatAdresi').text(data.teslimatAdresi);
+                    $('#modalTeslimatTelefonu').text(data.teslimatTelefonu);
+                    $('#modalSiparisNotu').text(data.siparisNotu || '-');
+                    $('#modalToplamTutar').text(data.toplamTutar);
+
+                    // Ürünleri tabloya ekle
+                    var tbody = $('#modalUrunlerTbody');
+                    tbody.empty();
+                    data.urunler.forEach(function(urun) {
+                        tbody.append(`
+                            <tr>
+                                <td>${urun.urunAdi}</td>
+                                <td>${urun.miktar}</td>
+                                <td>${urun.birimFiyat}</td>
+                                <td>${urun.toplamFiyat}</td>
+                            </tr>
+                        `);
+                    });
+
+                    // Modalı göster
+                    $('#siparisDetayModal').modal('show');
+                } else {
+                    alert(response.message || 'Sipariş detayları alınırken bir hata oluştu.');
+                }
+            });
+        }
+    </script>
+} 

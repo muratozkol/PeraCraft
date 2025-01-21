@@ -1,0 +1,115 @@
+@model SepetViewModel
+@{
+    ViewData["Title"] = "Sepetim";
+}
+
+@Html.AntiForgeryToken()
+
+<div class="cart-page">
+    <div class="cart-header">
+        <h1 class="cart-title">
+            <i class="fas fa-shopping-cart"></i>
+            Sepetim
+        </h1>
+    </div>
+
+    @if (Model.Items.Any())
+    {
+        <div class="cart-container">
+            <div class="cart-items">
+                @foreach (var item in Model.Items)
+                {
+                    <div class="cart-item" data-urun-id="@item.UrunId">
+                        <div class="cart-item-image">
+                            <img src="@item.Urun.ResimUrl" alt="@item.Urun.UrunAdi">
+                        </div>
+                        <div class="cart-item-content">
+                            <div class="cart-item-details">
+                                <h3 class="cart-item-title">@item.Urun.UrunAdi</h3>
+                                <div class="cart-item-price">@item.Urun.Fiyat.ToString("C")</div>
+                            </div>
+                            <div class="cart-item-actions">
+                                <div class="quantity-controls">
+                                    <button class="quantity-btn minus" onclick="updateCartQuantity(@item.UrunId, -1)">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                    <span class="quantity-display">@item.Miktar</span>
+                                    <button class="quantity-btn plus" onclick="updateCartQuantity(@item.UrunId, 1)">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </div>
+                                <button type="button" class="remove-btn" onclick="removeFromCart(@item.UrunId)">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                            <div class="cart-item-total">
+                                Toplam: @((item.Urun.Fiyat * item.Miktar).ToString("C"))
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="cart-summary">
+                <div class="summary-header">
+                    <i class="fas fa-receipt"></i>
+                    <span>Sipariş Özeti</span>
+                </div>
+                <div class="summary-content">
+                    <div class="summary-row">
+                        <span>Ara Toplam</span>
+                        <span>@Model.ToplamTutar.ToString("C")</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Kargo</span>
+                        <span>Ücretsiz</span>
+                    </div>
+                    <div class="summary-total">
+                        <span>Toplam</span>
+                        <span class="total-amount">@Model.ToplamTutar.ToString("C")</span>
+                    </div>
+                </div>
+                <a href="/Sepet/SiparisVer" class="checkout-btn">
+                    <span>Siparişi Tamamla</span>
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="empty-cart">
+            <div class="empty-cart-icon">
+                <i class="fas fa-shopping-cart"></i>
+            </div>
+            <h2>Sepetiniz Boş</h2>
+            <p>Sepetinizde ürün bulunmuyor.</p>
+            <a href="/" class="continue-shopping-btn">
+                <i class="fas fa-arrow-left"></i>
+                <span>Alışverişe Devam Et</span>
+            </a>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        function updateCartQuantity(urunId, change) {
+            $.ajax({
+                url: '/Sepet/MiktarGuncelle',
+                type: 'POST',
+                data: { urunId: urunId, miktar: change },
+                success: function(response) {
+                    if (response.success) {
+                        location.reload();
+                    } else {
+                        alert(response.message || 'Miktar güncellenirken bir hata oluştu.');
+                    }
+                },
+                error: function() {
+                    alert('Bir hata oluştu, lütfen tekrar deneyin.');
+                }
+            });
+        }
+    </script>
+} 

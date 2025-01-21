@@ -1,0 +1,205 @@
+@model Peracraft.Models.Adres
+@{
+    ViewData["Title"] = "Yeni Adres Ekle";
+}
+
+@section Styles {
+    <style>
+        .address-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .address-container h1 {
+            color: var(--text-color);
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .address-form input:not([type="checkbox"]),
+        .address-form textarea {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .address-form input:focus,
+        .address-form textarea:focus {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--neon-primary);
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
+        }
+
+        .address-form .form-check-input {
+            width: 1.2em;
+            height: 1.2em;
+            margin-top: 0.3em;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--glass-border);
+            cursor: pointer;
+        }
+
+        .address-form .form-check-input:checked {
+            background-color: var(--neon-primary);
+            border-color: var(--neon-primary);
+        }
+
+        .address-form .form-check-label {
+            color: var(--text-color);
+            cursor: pointer;
+        }
+
+        .address-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 2rem;
+        }
+
+        .address-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .btn-save {
+            background: var(--neon-success);
+        }
+
+        .btn-cancel {
+            background: var(--neon-secondary);
+        }
+
+        .address-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .alert {
+            border-radius: 12px;
+            padding: 1rem;
+            margin-top: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--glass-border);
+        }
+
+        .alert-danger {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: var(--neon-danger);
+            color: #ef4444;
+        }
+    </style>
+}
+
+<div class="address-container">
+    <h1>Yeni Adres Ekle</h1>
+
+    <form asp-action="Ekle" method="post" class="address-form">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" name="ReturnToSiparis" id="ReturnToSiparis" value="false" />
+
+        <div class="row g-4">
+            <div class="col-md-6">
+                <input asp-for="AdresBasligi" placeholder="Adres Başlığı" required />
+                <span asp-validation-for="AdresBasligi" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6">
+                <input asp-for="AdSoyad" placeholder="Ad Soyad" required />
+                <span asp-validation-for="AdSoyad" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6">
+                <input asp-for="Telefon" placeholder="Telefon" required />
+                <span asp-validation-for="Telefon" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6">
+                <input asp-for="Il" placeholder="İl" required />
+                <span asp-validation-for="Il" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6">
+                <input asp-for="Ilce" placeholder="İlçe" required />
+                <span asp-validation-for="Ilce" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6">
+                <input asp-for="Mahalle" placeholder="Mahalle" required />
+                <span asp-validation-for="Mahalle" class="text-danger"></span>
+            </div>
+
+            <div class="col-12">
+                <textarea asp-for="AcikAdres" placeholder="Açık Adres" rows="3" required></textarea>
+                <span asp-validation-for="AcikAdres" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6">
+                <input asp-for="PostaKodu" placeholder="Posta Kodu" />
+                <span asp-validation-for="PostaKodu" class="text-danger"></span>
+            </div>
+
+            <div class="col-12">
+                <div class="form-check">
+                    <input asp-for="VarsayilanMi" class="form-check-input" />
+                    <label asp-for="VarsayilanMi" class="form-check-label">Varsayılan Adres Olarak Ayarla</label>
+                </div>
+            </div>
+
+            <div class="col-12">
+                <div class="address-actions">
+                    <button type="submit" class="address-btn btn-save">
+                        <i class="fas fa-save"></i>
+                        <span>Kaydet</span>
+                    </button>
+                    <a asp-action="Index" class="address-btn btn-cancel">
+                        <i class="fas fa-arrow-left"></i>
+                        <span>Geri Dön</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Form validasyonu
+            $('form').on('submit', function(e) {
+                if (!$(this).valid()) {
+                    e.preventDefault();
+                    return false;
+                }
+                return true;
+            });
+
+            // ReturnToSiparis kontrolü
+            var returnToSiparis = localStorage.getItem('returnToSiparis');
+            if (returnToSiparis === 'true') {
+                document.getElementById('ReturnToSiparis').value = 'true';
+                localStorage.removeItem('returnToSiparis');
+            }
+        });
+    </script>
+} 

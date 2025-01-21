@@ -1,0 +1,116 @@
+@model List<Peracraft.Models.Urun>
+@{
+    ViewData["Title"] = ViewBag.KategoriAdi;
+}
+
+<div class="container-fluid">
+    <div class="glass-card mt-4">
+        <div class="category-header text-center mb-5">
+            <h1 class="display-4">@ViewBag.KategoriAdi</h1>
+            <p class="lead">@ViewBag.KategoriAciklama</p>
+        </div>
+
+        <div class="products-grid">
+            <div class="row g-4">
+                @foreach (var urun in Model)
+                {
+                    <div class="col-md-4 col-lg-3">
+                        <div class="product-card">
+                            <div class="product-image">
+                                <img src="@urun.ResimUrl" alt="@urun.UrunAdi">
+                                <button class="add-to-cart" onclick="addToCart(@urun.UrunId)">
+                                    <i class="bi bi-cart-plus"></i>
+                                </button>
+                                <div class="quantity-control" id="quantityControl_@urun.UrunId">
+                                    <div class="quantity-wrapper">
+                                        <button class="quantity-btn minus" onclick="updateQuantity(@urun.UrunId, -1)">
+                                            <i class="bi bi-dash"></i>
+                                        </button>
+                                        <span class="quantity-number">1</span>
+                                        <button class="quantity-btn plus" onclick="updateQuantity(@urun.UrunId, 1)">
+                                            <i class="bi bi-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="product-info">
+                                <h3>@urun.UrunAdi</h3>
+                                <p class="price">@urun.Fiyat.ToString("C2")</p>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function addToCart(urunId) {
+            const quantityControl = document.querySelector(`#quantityControl_${urunId}`);
+            const addToCartBtn = quantityControl.previousElementSibling;
+            const quantityNumber = quantityControl.querySelector('.quantity-number');
+            const miktar = parseInt(quantityNumber.textContent);
+
+            fetch('/Sepet/Ekle', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    urunId: urunId,
+                    miktar: miktar
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Sepet sayacını güncelle
+                    const event = new Event('cartUpdated');
+                    document.dispatchEvent(event);
+
+                    // Bildirim göster
+                    const notification = document.getElementById('cartNotification');
+                    notification.classList.add('show');
+                    setTimeout(() => {
+                        notification.classList.remove('show');
+                    }, 3000);
+
+                    // Quantity control'ü sıfırla ve gizle
+                    quantityNumber.textContent = '1';
+                    quantityControl.classList.remove('show');
+                    addToCartBtn.style.display = 'flex';
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Sepete ekleme hatası:', error);
+                alert('Ürün sepete eklenirken bir hata oluştu.');
+            });
+        }
+
+        function updateQuantity(urunId, change) {
+            const quantityControl = document.querySelector(`#quantityControl_${urunId}`);
+            const quantityNumber = quantityControl.querySelector('.quantity-number');
+            let newQuantity = parseInt(quantityNumber.textContent) + change;
+
+            if (newQuantity < 1) newQuantity = 1;
+            if (newQuantity > 10) newQuantity = 10;
+
+            quantityNumber.textContent = newQuantity;
+        }
+
+        document.querySelectorAll('.add-to-cart').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                this.style.display = 'none';
+                const quantityControl = this.nextElementSibling;
+                quantityControl.classList.add('show');
+            });
+        });
+    </script>
+} 
+
+

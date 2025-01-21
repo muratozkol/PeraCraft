@@ -1,0 +1,182 @@
+@using Peracraft.Models
+@model List<SepetItem>
+
+<div class="cart-page">
+    <div class="cart-header">
+        <h1 class="cart-title">Alışveriş Sepetim</h1>
+        <div class="cart-summary">
+            <span class="cart-count">@Model.Count ürün</span>
+        </div>
+    </div>
+
+    <div class="cart-container">
+        <div class="cart-items">
+            @foreach (var item in Model)
+            {
+                <div class="cart-item" data-id="@item.UrunId">
+                    <div class="item-image">
+                        <img src="@item.ResimUrl" alt="@item.UrunAdi">
+                    </div>
+                    <div class="item-details">
+                        <div class="item-header">
+                            <h3 class="item-name">@item.UrunAdi</h3>
+                            <button class="remove-item" onclick="removeFromCart(@item.UrunId)">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <p class="item-description">@item.Urun?.Aciklama</p>
+                        <div class="item-controls">
+                            <div class="quantity-controls glass-effect">
+                                <button class="quantity-btn minus" onclick="updateCartQuantity(@item.UrunId, -1)">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <span class="quantity-display">@item.Miktar</span>
+                                <button class="quantity-btn plus" onclick="updateCartQuantity(@item.UrunId, 1)">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                            <div class="item-price">
+                                <span class="price">@((item.Fiyat * item.Miktar).ToString("C"))</span>
+                                @if (item.Miktar > 1)
+                                {
+                                    <span class="price-per-item">@item.Fiyat.ToString("C") / adet</span>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="cart-sidebar">
+            <div class="order-summary glass-effect">
+                <h2>Sipariş Özeti</h2>
+                <div class="summary-items">
+                    <div class="summary-item">
+                        <span>Ara Toplam</span>
+                        <span>@Model.Sum(x => x.Fiyat * x.Miktar).ToString("C")</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Kargo</span>
+                        <span>Ücretsiz</span>
+                    </div>
+                    @if (Model.Any())
+                    {
+                        <div class="summary-item total">
+                            <span>Toplam</span>
+                            <span>@Model.Sum(x => x.Fiyat * x.Miktar).ToString("C")</span>
+                        </div>
+                    }
+                </div>
+                <button class="checkout-btn primary-btn" onclick="proceedToCheckout()">
+                    <span>Ödemeye Geç</span>
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+
+            <div class="continue-shopping">
+                <a href="/" class="secondary-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Alışverişe Devam Et</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function updateCartQuantity(productId, change) {
+            const item = document.querySelector(`[data-id="${productId}"]`);
+            if (!item) return;
+
+            const quantityDisplay = item.querySelector('.quantity-display');
+            const currentQuantity = parseInt(quantityDisplay.textContent);
+            const newQuantity = currentQuantity + change;
+
+            if (newQuantity < 1) return;
+
+            // AJAX çağrısı
+            fetch(`/Cart/UpdateQuantity/${productId}?quantity=${newQuantity}`, {
+                method: 'POST'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Animasyonlu güncelleme
+                    gsap.to(quantityDisplay, {
+                        scale: 1.2,
+                        duration: 0.2,
+                        onComplete: () => {
+                            quantityDisplay.textContent = newQuantity;
+                            gsap.to(quantityDisplay, {
+                                scale: 1,
+                                duration: 0.2
+                            });
+                        }
+                    });
+
+                    // Fiyat güncellemesi
+                    updatePrices();
+                    // Sepet badge'ini güncelle
+                    window.parent.updateCartBadge();
+                }
+            });
+        }
+
+        function removeFromCart(productId) {
+            const item = document.querySelector(`[data-id="${productId}"]`);
+            if (!item) return;
+
+            // Silme animasyonu
+            gsap.to(item, {
+                height: 0,
+                opacity: 0,
+                padding: 0,
+                margin: 0,
+                duration: 0.5,
+                onComplete: () => {
+                    // AJAX çağrısı
+                    fetch(`/Cart/Remove/${productId}`, {
+                        method: 'POST'
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            item.remove();
+                            updatePrices();
+                            // Sepet badge'ini güncelle
+                            window.parent.updateCartBadge();
+                        }
+                    });
+                }
+            });
+        }
+
+        function updatePrices() {
+            fetch('/Cart/GetSummary')
+            .then(response => response.json())
+            .then(data => {
+                // Fiyat güncellemelerini animasyonlu yap
+                const elements = document.querySelectorAll('.summary-item span:last-child');
+                elements.forEach(el => {
+                    gsap.to(el, {
+                        scale: 1.1,
+                        duration: 0.2,
+                        onComplete: () => {
+                            el.textContent = data.formattedTotal;
+                            gsap.to(el, {
+                                scale: 1,
+                                duration: 0.2
+                            });
+                        }
+                    });
+                });
+            });
+        }
+
+        function proceedToCheckout() {
+            window.location.href = '/Checkout';
+        }
+    </script>
+} 

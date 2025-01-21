@@ -1,0 +1,771 @@
+@model Peracraft.Models.SiparisViewModel
+
+@{
+    ViewData["Title"] = "Sipariş Ver";
+}
+
+<style>
+    .checkout-page {
+        background: linear-gradient(135deg, #2c3e50, #3498db);
+        min-height: 100vh;
+        padding: 2rem 1rem;
+    }
+
+    .checkout-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    @@media (min-width: 992px) {
+        .checkout-container {
+            grid-template-columns: 1.5fr 1fr;
+        }
+    }
+
+    .glass-effect {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+
+    .checkout-form, .order-summary {
+        padding: 2rem;
+        color: white;
+        background: rgba(52, 152, 219, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-section {
+        margin-bottom: 2rem;
+        padding: 1.5rem;
+        background: rgba(52, 152, 219, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-control {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
+        padding: 0.8rem;
+        border-radius: 0.5rem;
+    }
+
+    .form-control::placeholder {
+        color: rgba(255, 255, 255, 0.6);
+    }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    @@media (min-width: 768px) {
+        .form-row {
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+
+    .payment-methods {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .payment-method {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        padding: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .payment-method:hover {
+        transform: translateY(-2px);
+    }
+
+    .summary-item {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        padding: 1rem;
+        margin-bottom: 1rem;
+        display: grid;
+        grid-template-columns: 80px 1fr auto;
+        gap: 1rem;
+        align-items: center;
+    }
+
+    .item-image img {
+        width: 100%;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 0.5rem;
+    }
+
+    .checkout-button {
+        width: 100%;
+        padding: 1rem;
+        background: linear-gradient(45deg, #3498db, #2980b9);
+        border: none;
+        border-radius: 0.5rem;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .checkout-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .image-upload-section {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .image-preview {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+
+    .preview-image {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 0.5rem;
+    }
+
+    .error-message {
+        background: rgba(255, 59, 48, 0.1);
+        color: #ff3b30;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        margin-top: 1rem;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 59, 48, 0.2);
+    }
+
+    .secure-checkout {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-top: 1rem;
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+    .summary-totals {
+        margin-top: 2rem;
+        padding-top: 1rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .summary-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+        color: rgba(255, 255, 255, 0.8);
+    }
+
+    .summary-row.total {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: white;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    /* Mobil Görünüm Stilleri */
+    @@media (max-width: 768px) {
+        .order-page {
+            padding: 1rem;
+        }
+
+        .order-container {
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        .form-section {
+            margin-bottom: 1rem;
+            padding: 1.2rem;
+            border-radius: 15px;
+            background: rgba(52, 152, 219, 0.08);
+        }
+
+        .form-section h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-section h3 i {
+            color: #3498db;
+            font-size: 1.3rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-control {
+            height: 45px;
+            font-size: 0.95rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0.8rem;
+            border-radius: 12px;
+            color: #fff;
+        }
+
+        .form-control:focus {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(52, 152, 219, 0.5);
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+
+        /* Ödeme Seçenekleri */
+        .payment-methods {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .payment-method {
+            position: relative;
+            width: 100%;
+        }
+
+        .payment-method input[type="radio"] {
+            display: none;
+        }
+
+        .payment-method label {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .payment-method input[type="radio"]:checked + label {
+            background: rgba(52, 152, 219, 0.15);
+            border-color: rgba(52, 152, 219, 0.5);
+        }
+
+        .payment-method label i {
+            font-size: 1.5rem;
+            color: #3498db;
+        }
+
+        /* Sipariş Özeti */
+        .order-summary {
+            position: sticky;
+            top: 1rem;
+            background: rgba(52, 152, 219, 0.08);
+            border-radius: 15px;
+            padding: 1.2rem;
+            margin-top: 1rem;
+        }
+
+        .summary-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .summary-header h3 {
+            font-size: 1.2rem;
+            color: #fff;
+            margin: 0;
+        }
+
+        .summary-items {
+            max-height: none;
+            margin-bottom: 1rem;
+        }
+
+        .summary-item {
+            display: grid;
+            grid-template-columns: 60px 1fr auto;
+            gap: 1rem;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .item-image {
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .item-details h4 {
+            font-size: 0.9rem;
+            margin: 0 0 0.3rem 0;
+            color: #fff;
+        }
+
+        .item-price {
+            font-size: 0.95rem;
+            color: #3498db;
+            font-weight: 500;
+        }
+
+        .summary-totals {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.8rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+        }
+
+        .summary-row.total {
+            font-size: 1.1rem;
+            color: #fff;
+            font-weight: 600;
+            margin-top: 0.8rem;
+            padding-top: 0.8rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Sipariş Butonu */
+        .checkout-button {
+            width: 100%;
+            height: 50px;
+            margin-top: 1rem;
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .checkout-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .checkout-button i {
+            font-size: 1.2rem;
+        }
+
+        /* Resim Yükleme Alanı */
+        .image-upload-section {
+            background: rgba(52, 152, 219, 0.08);
+            border-radius: 15px;
+            padding: 1.2rem;
+            margin: 1rem 0;
+        }
+
+        .image-upload-section h3 {
+            font-size: 1.2rem;
+            color: #fff;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .image-upload-section h3 i {
+            color: #3498db;
+        }
+
+        .image-preview {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 0.8rem;
+            margin-top: 1rem;
+        }
+
+        .preview-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+
+        /* Güvenli Ödeme Bilgisi */
+        .secure-checkout {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            padding: 0.8rem;
+            background: rgba(52, 152, 219, 0.08);
+            border-radius: 12px;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .secure-checkout i {
+            color: #3498db;
+            font-size: 1.1rem;
+        }
+    }
+
+    .form-group label {
+        color: rgba(255, 255, 255, 0.9);
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+        display: block;
+    }
+
+    .form-section h2 {
+        color: rgba(255, 255, 255, 1);
+        margin-bottom: 1.5rem;
+        font-size: 1.3rem;
+        font-weight: 600;
+    }
+
+    .checkout-header h1 {
+        color: rgba(255, 255, 255, 1);
+        margin-bottom: 0.5rem;
+    }
+
+    .checkout-header p {
+        color: rgba(255, 255, 255, 0.8);
+        margin-bottom: 2rem;
+    }
+
+    .payment-method label {
+        color: rgba(255, 255, 255, 0.9);
+    }
+
+    .summary-header h2 {
+        color: rgba(255, 255, 255, 1);
+        font-size: 1.3rem;
+        margin-bottom: 0;
+    }
+
+    .item-count {
+        color: rgba(255, 255, 255, 0.8);
+    }
+</style>
+
+<div class="checkout-page">
+    <div class="checkout-container">
+                <!-- Sol Taraf - Teslimat Bilgileri -->
+        <div class="checkout-form glass-effect">
+            <div class="checkout-header">
+                <h1>Sipariş Detayları</h1>
+                <p>Lütfen teslimat bilgilerinizi giriniz</p>
+                            </div>
+                            
+            <form id="checkoutForm" method="post">
+                <!-- Teslimat Bilgileri -->
+                <div class="form-section">
+                    <h2>Teslimat Bilgileri</h2>
+                    <div class="form-group">
+                        <label for="AdSoyad">Ad Soyad</label>
+                        <input type="text" id="AdSoyad" name="AdSoyad" required class="form-control" value="@Model.AdSoyad">
+                                </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="Email">E-posta</label>
+                            <input type="email" id="Email" name="Email" required class="form-control" value="@Model.Email">
+                                                        </div>
+                        <div class="form-group">
+                            <label for="Telefon">Telefon</label>
+                            <input type="tel" id="Telefon" name="Telefon" required class="form-control" value="@Model.Telefon">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                <!-- Adres Bilgileri -->
+                <div class="form-section">
+                    <h2>Adres Bilgileri</h2>
+                    <div class="form-group">
+                        <label for="Adres">Adres</label>
+                        <textarea id="Adres" name="Adres" required class="form-control" rows="3">@Model.Adres</textarea>
+                                        </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="Sehir">Şehir</label>
+                            <select id="Sehir" name="Sehir" required class="form-control">
+                                <option value="">Seçiniz...</option>
+                                <option value="istanbul" selected="@(Model.Sehir == "istanbul")">İstanbul</option>
+                                <option value="ankara" selected="@(Model.Sehir == "ankara")">Ankara</option>
+                                <option value="izmir" selected="@(Model.Sehir == "izmir")">İzmir</option>
+                            </select>
+                                </div>
+                        <div class="form-group">
+                            <label for="PostaKodu">Posta Kodu</label>
+                            <input type="text" id="PostaKodu" name="PostaKodu" required class="form-control" value="@Model.PostaKodu">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ödeme Bilgileri -->
+                <div class="form-section">
+                    <h2>Ödeme Bilgileri</h2>
+                    <div class="payment-methods">
+                        <div class="payment-method">
+                            <input type="radio" id="creditCard" name="OdemeTipi" value="creditCard" checked>
+                            <label for="creditCard">
+                                <i class="fas fa-credit-card"></i>
+                                Kredi Kartı
+                            </label>
+                        </div>
+                        <div class="payment-method">
+                            <input type="radio" id="transfer" name="OdemeTipi" value="transfer">
+                            <label for="transfer">
+                                <i class="fas fa-university"></i>
+                                Havale/EFT
+                            </label>
+                        </div>
+                    </div>
+
+                    <div id="creditCardForm" class="payment-form">
+                        <div class="form-group">
+                            <label for="cardNumber">Kart Numarası</label>
+                            <div class="card-input-wrapper">
+                                <input type="text" id="cardNumber" name="KartNumarasi" placeholder="1234 5678 9012 3456" class="form-control">
+                                <div class="card-icons">
+                                    <i class="fab fa-cc-visa"></i>
+                                    <i class="fab fa-cc-mastercard"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="expiryDate">Son Kullanma Tarihi</label>
+                                <input type="text" id="expiryDate" name="SonKullanmaTarihi" placeholder="AA/YY" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="cvv">CVV</label>
+                                <input type="text" id="cvv" name="Cvv" placeholder="123" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="cardName">Kart Üzerindeki İsim</label>
+                            <input type="text" id="cardName" name="KartSahibi" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Görsel Yükleme Bölümü -->
+                <div class="form-section">
+                    <h2>Sipariş Görselleri</h2>
+                    <p>Siparişinizle ilgili görseller ekleyiniz</p>
+                    <div class="image-upload-section">
+                        <input type="file" id="SiparisGorselleri" name="SiparisGorselleri" multiple accept="image/*" class="form-control" required>
+                        <div class="image-preview" id="imagePreview"></div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Sağ Taraf - Sipariş Özeti -->
+        <div class="order-summary glass-effect">
+            <div class="summary-header">
+                <h2>Sipariş Özeti</h2>
+                <span class="item-count">@Model.SepetUrunleri.Count() Ürün</span>
+            </div>
+
+            <div class="summary-items">
+                @foreach (var item in Model.SepetUrunleri)
+                {
+                    <div class="summary-item">
+                        <div class="item-image">
+                            <img src="@item.ResimUrl" alt="@item.UrunAdi">
+                        </div>
+                        <div class="item-details">
+                            <h3>@item.UrunAdi</h3>
+                            <p class="item-description">@item.Urun?.Aciklama</p>
+                            <div class="item-quantity">Adet: @item.Miktar</div>
+                        </div>
+                        <div class="item-price">
+                            @((item.Fiyat * item.Miktar).ToString("C2"))
+                        </div>
+                    </div>
+                }
+                    </div>
+
+            <div class="summary-totals">
+                <div class="summary-row">
+                    <span>Ara Toplam</span>
+                    <span>@Model.AraToplam.ToString("C")</span>
+                </div>
+                <div class="summary-row">
+                    <span>Kargo</span>
+                    <span>@(Model.KargoUcreti > 0 ? Model.KargoUcreti.ToString("C") : "Ücretsiz")</span>
+                </div>
+                <div class="summary-row total">
+                    <span>Toplam</span>
+                    <span>@Model.ToplamTutar.ToString("C")</span>
+                </div>
+            </div>
+
+            <button type="submit" form="checkoutForm" class="checkout-button">
+                <span>Siparişi Tamamla</span>
+                <i class="fas fa-arrow-right"></i>
+            </button>
+
+            <div class="secure-checkout">
+                <i class="fas fa-lock"></i>
+                <span>256-bit SSL ile güvenli ödeme</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Kredi kartı numarası formatlama
+            const cardNumber = document.getElementById('cardNumber');
+            cardNumber?.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                value = value.replace(/(.{4})/g, '$1 ').trim();
+                e.target.value = value;
+            });
+
+            // Son kullanma tarihi formatlama
+            const expiryDate = document.getElementById('expiryDate');
+            expiryDate?.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length >= 2) {
+                    value = value.slice(0,2) + '/' + value.slice(2,4);
+                }
+                e.target.value = value;
+            });
+
+            // CVV sadece rakam
+            const cvv = document.getElementById('cvv');
+            cvv?.addEventListener('input', function(e) {
+                e.target.value = e.target.value.replace(/\D/g, '').slice(0,3);
+            });
+
+            // Ödeme yöntemi değişikliği
+            const paymentMethods = document.querySelectorAll('input[name="OdemeTipi"]');
+            const creditCardForm = document.getElementById('creditCardForm');
+
+            paymentMethods.forEach(method => {
+                method.addEventListener('change', function() {
+                    if (this.value === 'creditCard') {
+                        creditCardForm.style.display = 'block';
+                    } else {
+                        creditCardForm.style.display = 'none';
+                    }
+                });
+            });
+
+            // Görsel önizleme
+            document.getElementById('SiparisGorselleri')?.addEventListener('change', function(e) {
+                const preview = document.getElementById('imagePreview');
+                preview.innerHTML = '';
+                
+                Array.from(e.target.files).forEach(file => {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const img = document.createElement('img');
+                        img.src = e.target.result;
+                        img.className = 'preview-image';
+                        preview.appendChild(img);
+                    }
+                    reader.readAsDataURL(file);
+                });
+            });
+
+            // Form gönderimi
+            const checkoutForm = document.getElementById('checkoutForm');
+            checkoutForm?.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const fileInput = document.getElementById('SiparisGorselleri');
+                if (fileInput.files.length === 0) {
+                    showError('Lütfen en az bir görsel yükleyiniz.');
+                return;
+            }
+            
+                try {
+                    const formData = new FormData(this);
+                    const response = await fetch('/Sepet/SiparisiTamamla', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        window.location.href = result.redirectUrl;
+                    } else {
+                        showError(result.message);
+                    }
+                } catch (error) {
+                    console.error('Sipariş hatası:', error);
+                    showError('Bir hata oluştu. Lütfen tekrar deneyin.');
+                }
+            });
+        });
+
+        function showError(message) {
+            // Hata mesajı gösterme
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error-message';
+            errorDiv.textContent = message;
+            
+            document.querySelector('.checkout-header').appendChild(errorDiv);
+            
+            setTimeout(() => {
+                errorDiv.remove();
+            }, 5000);
+        }
+    </script>
+} 

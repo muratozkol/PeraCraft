@@ -1,0 +1,867 @@
+﻿@{
+    ViewData["Title"] = "Ana Sayfa";
+}
+
+@Html.AntiForgeryToken()
+
+<!-- Inter font -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@200;300;400;500&display=swap" rel="stylesheet">
+
+@model List<Urun>
+
+<!-- Hero Section -->
+<section class="hero">
+    <div class="parallax__wrapper">
+        <div class="parallax">
+            <div class="parallax__group">
+                <div class="parallax__layer parallax__layer--back">
+                    <img src="https://cdn.prod.website-files.com/671752cd4027f01b1b8f1c7f/6717795be09b462b2e8ebf71_osmo-parallax-layer-3.webp">
+                </div>
+                <div class="parallax__layer parallax__layer--middle">
+                    <img src="https://cdn.prod.website-files.com/671752cd4027f01b1b8f1c7f/6717795b4d5ac529e7d3a562_osmo-parallax-layer-2.webp">
+                </div>
+                <div class="parallax__layer parallax__layer--title">
+                    <h1 style="font-family: 'Montserrat', sans-serif; font-weight: 300;">PERACRAFT</h1>
+                </div>
+                <div class="parallax__layer parallax__layer--front">
+                    <img src="https://cdn.prod.website-files.com/671752cd4027f01b1b8f1c7f/6717795bb5aceca85011ad83_osmo-parallax-layer-1.webp">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="hero-content">
+        <a href="#products" class="hero-btn primary-btn">
+            <span>Ürünleri Keşfet</span>
+            <i class="fas fa-arrow-right"></i>
+        </a>
+    </div>
+</section>
+
+<!-- GSAP ve Lenis için CDN'ler -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+
+    // Parallax efekti için timeline oluştur
+    const tl = gsap.timeline({
+        scrollTrigger: {
+            trigger: ".parallax__wrapper",
+            start: "top top",
+            end: "bottom top",
+            scrub: 1
+        }
+    });
+
+    // Katmanları hareket ettir
+    tl.to(".parallax__layer--front img", {
+        yPercent: 15,
+        ease: "none"
+    }, 0);
+
+    tl.to(".parallax__layer--middle img", {
+        yPercent: 35,
+        ease: "none"
+    }, 0);
+
+    tl.to(".parallax__layer--back img", {
+        yPercent: 50,
+        ease: "none"
+    }, 0);
+
+    tl.to(".parallax__layer--title", {
+        yPercent: 50,
+        ease: "none"
+    }, 0);
+
+    // Smooth scroll için
+    document.querySelector('.hero-btn').addEventListener('click', (e) => {
+        e.preventDefault();
+        const productsSection = document.querySelector('#products');
+        gsap.to(window, {
+            duration: 1,
+            scrollTo: {
+                y: productsSection,
+                offsetY: 50
+            },
+            ease: "power2.out"
+        });
+    });
+});
+</script>
+
+<!-- Products Section -->
+<div class="products-section" id="products">
+    <!-- Bardaklar Kategorisi -->
+    <div class="category-section">
+        <div class="category-header">
+            <h2 class="category-title">Bardaklar</h2>
+            <p class="category-description">Özel tasarım, el yapımı bardak koleksiyonu</p>
+        </div>
+        
+        <div class="product-slider-section">
+            <div class="slider-track">
+                @foreach (var urun in Model.Where(u => u.KategoriId == 1))
+                {
+                    <div class="product-card glass-effect" data-product-id="@urun.UrunId">
+                        <div class="product-image-container">
+                            <img src="@urun.ResimUrl" alt="@urun.UrunAdi" class="product-image">
+                            <div class="product-overlay">
+                                <button class="quick-view-btn" onclick="showQuickView(@urun.UrunId)">
+                                    <i class="fas fa-eye"></i>
+                                    <span>Hızlı Bakış</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="product-info">
+                            <div class="product-header">
+                                <h3 class="product-name">@urun.UrunAdi</h3>
+                                <p class="product-description">@urun.Aciklama?.Split('.').FirstOrDefault()</p>
+                            </div>
+                            <div class="product-details">
+                                <div class="product-meta">
+                                    <div class="product-price">
+                                        <span class="current-price">@urun.Fiyat.ToString("C2")</span>
+                                        @if (urun.Fiyat < 100)
+                                        {
+                                            <span class="original-price">@((urun.Fiyat * 1.2m).ToString("C2"))</span>
+                                        }
+                                    </div>
+                                    <div class="product-rating">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star-half-alt"></i>
+                                        <span>(4.5)</span>
+                                    </div>
+                                </div>
+                                <div class="product-actions">
+                                    <div class="quantity-controls glass-effect">
+                                        <button class="quantity-btn minus" onclick="updateQuantity(@urun.UrunId, -1)">
+                                            <i class="fas fa-minus"></i>
+                                        </button>
+                                        <span id="quantity-@urun.UrunId" class="quantity-display">1</span>
+                                        <button class="quantity-btn plus" onclick="updateQuantity(@urun.UrunId, 1)">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                    </div>
+                                    <button class="add-to-cart-btn glass-effect" onclick="addToCart(event, @urun.UrunId)">
+                                        <i class="fas fa-cart-plus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="slider-controls">
+                <button class="slider-arrow prev glass-effect">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <div class="slider-dots">
+                    @for (int i = 0; i < Model.Where(u => u.KategoriId == 1).Count(); i++)
+                    {
+                        <div class="slider-dot @(i == 0 ? "active" : "")"></div>
+                    }
+                </div>
+                <button class="slider-arrow next glass-effect">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Canvas Tablolar Kategorisi -->
+    <div class="category-section">
+        <div class="category-header">
+            <h2 class="category-title">Canvas Tablolar</h2>
+            <p class="category-description">Modern ve şık canvas tablo koleksiyonu</p>
+        </div>
+        
+        <div class="product-slider-section">
+            <div class="slider-track">
+                @foreach (var urun in Model.Where(u => u.KategoriId == 2))
+                {
+                    <div class="product-card glass-effect" data-product-id="@urun.UrunId">
+                        
+                        <div class="product-image-container">
+                            <img src="@urun.ResimUrl" alt="@urun.UrunAdi" class="product-image">
+                            <div class="product-overlay">
+                                <button class="quick-view-btn" onclick="showQuickView(@urun.UrunId)">
+                                    <i class="fas fa-eye"></i>
+                                    <span>Hızlı Bakış</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-name">@urun.UrunAdi</h3>
+                            <p class="product-description">@urun.Aciklama?.Split('.').FirstOrDefault()</p>
+                            <div class="product-meta">
+                                <div class="product-price">
+                                    <span class="current-price">@urun.Fiyat.ToString("C2")</span>
+                                    @if (urun.Fiyat < 100)
+                                    {
+                                        <span class="original-price">@((urun.Fiyat * 1.2m).ToString("C2"))</span>
+                                    }
+                                </div>
+                                <div class="product-rating">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star-half-alt"></i>
+                                    <span>(4.5)</span>
+                                </div>
+                            </div>
+                            <div class="product-actions">
+                                <div class="quantity-controls glass-effect">
+                                    <button class="quantity-btn minus" onclick="updateQuantity(@urun.UrunId, -1)">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                    <span id="quantity-@urun.UrunId" class="quantity-display">1</span>
+                                    <button class="quantity-btn plus" onclick="updateQuantity(@urun.UrunId, 1)">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </div>
+                                <button class="add-to-cart-btn glass-effect" onclick="addToCart(event, @urun.UrunId)">
+                                    <i class="fas fa-cart-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="slider-controls">
+                <button class="slider-arrow prev glass-effect">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <div class="slider-dots">
+                    @for (int i = 0; i < Model.Where(u => u.KategoriId == 2).Count(); i++)
+                    {
+                        <div class="slider-dot @(i == 0 ? "active" : "")"></div>
+                    }
+                </div>
+                <button class="slider-arrow next glass-effect">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Web Siteleri Kategorisi -->
+    <div class="category-section">
+        <div class="category-header">
+            <h2 class="category-title">Kişiye Özel Web Siteleri</h2>
+            <p class="category-description">Profesyonel ve modern web sitesi çözümleri</p>
+        </div>
+        
+        <div class="product-slider-section">
+            <div class="slider-track">
+                @foreach (var urun in Model.Where(u => u.KategoriId == 3))
+                {
+                    <div class="product-card glass-effect" data-product-id="@urun.UrunId">
+                        
+                        <div class="product-image-container">
+                            <img src="@urun.ResimUrl" alt="@urun.UrunAdi" class="product-image">
+                            <div class="product-overlay">
+                                <button class="quick-view-btn" onclick="showQuickView(@urun.UrunId)">
+                                    <i class="fas fa-eye"></i>
+                                    <span>Hızlı Bakış</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-name">@urun.UrunAdi</h3>
+                            <p class="product-description">@urun.Aciklama?.Split('.').FirstOrDefault()</p>
+                            <div class="product-meta">
+                                <div class="product-price">
+                                    <span class="current-price">@urun.Fiyat.ToString("C2")</span>
+                                    @if (urun.Fiyat < 100)
+                                    {
+                                        <span class="original-price">@((urun.Fiyat * 1.2m).ToString("C2"))</span>
+                                    }
+                                </div>
+                                <div class="product-rating">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star-half-alt"></i>
+                                    <span>(4.5)</span>
+                                </div>
+                            </div>
+                            <div class="product-actions">
+                                <div class="quantity-controls glass-effect">
+                                    <button class="quantity-btn minus" onclick="updateQuantity(@urun.UrunId, -1)">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                    <span id="quantity-@urun.UrunId" class="quantity-display">1</span>
+                                    <button class="quantity-btn plus" onclick="updateQuantity(@urun.UrunId, 1)">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </div>
+                                <button class="add-to-cart-btn glass-effect" onclick="addToCart(event, @urun.UrunId)">
+                                    <i class="fas fa-cart-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="slider-controls">
+                <button class="slider-arrow prev glass-effect">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <div class="slider-dots">
+                    @for (int i = 0; i < Model.Where(u => u.KategoriId == 3).Count(); i++)
+                    {
+                        <div class="slider-dot @(i == 0 ? "active" : "")"></div>
+                    }
+                </div>
+                <button class="slider-arrow next glass-effect">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick View Modal -->
+<div class="modal quick-view-modal fade" id="quickViewModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <button type="button" class="close-btn" data-bs-dismiss="modal">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="quick-view-content">
+                <!-- İçerik JavaScript ile doldurulacak -->
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sliders = document.querySelectorAll('.product-slider-section');
+            
+            sliders.forEach(slider => {
+                const track = slider.querySelector('.slider-track');
+                const cards = track.querySelectorAll('.product-card');
+                const dots = slider.querySelectorAll('.slider-dot');
+                
+                let currentIndex = 0;
+                let startX;
+                let scrollLeft;
+                let isDown = false;
+                let isDragging = false;
+                let startTime;
+                let startScrollLeft;
+                let velocity = 0;
+                let lastX;
+                let lastTime;
+                let momentumID;
+
+                // İlk kartı aktif yap
+                updateActiveCard();
+
+                // Scroll olayını dinle
+                track.addEventListener('scroll', () => {
+                    if (!isDragging) {
+                        requestAnimationFrame(() => {
+                            const scrollPosition = track.scrollLeft;
+                            const cardWidth = cards[0].offsetWidth + parseInt(window.getComputedStyle(cards[0]).marginRight);
+                            currentIndex = Math.round(scrollPosition / cardWidth);
+                            updateActiveCard();
+                        });
+                    }
+                });
+
+                // Dokunmatik olayları
+                track.addEventListener('touchstart', (e) => {
+                    isDown = true;
+                    isDragging = true;
+                    startX = e.touches[0].pageX - track.offsetLeft;
+                    scrollLeft = track.scrollLeft;
+                    startTime = Date.now();
+                    startScrollLeft = track.scrollLeft;
+                    lastX = e.touches[0].pageX;
+                    lastTime = startTime;
+                    cancelMomentumTracking();
+                });
+
+                track.addEventListener('touchend', () => {
+                    isDown = false;
+                    isDragging = false;
+                    const endTime = Date.now();
+                    const timeElapsed = endTime - startTime;
+                    const scrollDistance = track.scrollLeft - startScrollLeft;
+                    velocity = scrollDistance / timeElapsed;
+
+                    if (Math.abs(velocity) > 0.5) {
+                        momentumScroll();
+                    } else {
+                        snapToNearestCard();
+                    }
+                });
+
+                track.addEventListener('touchmove', (e) => {
+                    if (!isDown) return;
+                    e.preventDefault();
+                    const x = e.touches[0].pageX - track.offsetLeft;
+                    const currentTime = Date.now();
+                    const timeElapsed = currentTime - lastTime;
+                    const distanceMoved = e.touches[0].pageX - lastX;
+                    velocity = distanceMoved / timeElapsed;
+                    
+                    lastX = e.touches[0].pageX;
+                    lastTime = currentTime;
+                    
+                    const walk = (x - startX) * 1.5; // Hız çarpanı
+                    track.scrollLeft = scrollLeft - walk;
+                });
+
+                function momentumScroll() {
+                    if (Math.abs(velocity) < 0.1) {
+                        snapToNearestCard();
+                        return;
+                    }
+
+                    track.scrollLeft += velocity * 10;
+                    velocity *= 0.95; // Sürtünme faktörü
+
+                    momentumID = requestAnimationFrame(momentumScroll);
+                }
+
+                function cancelMomentumTracking() {
+                    cancelAnimationFrame(momentumID);
+                }
+
+                function snapToNearestCard() {
+                    cancelMomentumTracking();
+                    const cardWidth = cards[0].offsetWidth + parseInt(window.getComputedStyle(cards[0]).marginRight);
+                    const scrollPosition = track.scrollLeft;
+                    const targetIndex = Math.round(scrollPosition / cardWidth);
+                    
+                    track.scrollTo({
+                        left: targetIndex * cardWidth,
+                        behavior: 'smooth'
+                    });
+                    
+                    currentIndex = targetIndex;
+                    updateActiveCard();
+                }
+
+                // Mouse olayları için benzer değişiklikler
+                track.addEventListener('mousedown', (e) => {
+                    isDown = true;
+                    isDragging = true;
+                    startX = e.pageX - track.offsetLeft;
+                    scrollLeft = track.scrollLeft;
+                    startTime = Date.now();
+                    startScrollLeft = track.scrollLeft;
+                    lastX = e.pageX;
+                    lastTime = startTime;
+                    cancelMomentumTracking();
+                });
+
+                track.addEventListener('mousemove', (e) => {
+                    if (!isDown) return;
+                    e.preventDefault();
+                    const x = e.pageX - track.offsetLeft;
+                    const currentTime = Date.now();
+                    const timeElapsed = currentTime - lastTime;
+                    const distanceMoved = e.pageX - lastX;
+                    velocity = distanceMoved / timeElapsed;
+                    
+                    lastX = e.pageX;
+                    lastTime = currentTime;
+                    
+                    const walk = (x - startX) * 1.5;
+                    track.scrollLeft = scrollLeft - walk;
+                });
+
+                track.addEventListener('mouseup', () => {
+                    isDown = false;
+                    isDragging = false;
+                    const endTime = Date.now();
+                    const timeElapsed = endTime - startTime;
+                    const scrollDistance = track.scrollLeft - startScrollLeft;
+                    velocity = scrollDistance / timeElapsed;
+
+                    if (Math.abs(velocity) > 0.5) {
+                        momentumScroll();
+                    } else {
+                        snapToNearestCard();
+                    }
+                });
+
+                track.addEventListener('mouseleave', () => {
+                    if (isDown) {
+                        isDown = false;
+                        isDragging = false;
+                        snapToNearestCard();
+                    }
+                });
+
+                function updateActiveCard() {
+                    cards.forEach((card, index) => {
+                        card.classList.toggle('active', index === currentIndex);
+                    });
+                    
+                    dots.forEach((dot, index) => {
+                        dot.classList.toggle('active', index === currentIndex);
+                    });
+                }
+            });
+        });
+
+        function showQuickView(urunId) {
+            const product = document.querySelector(`[data-product-id="${urunId}"]`);
+            const modal = new bootstrap.Modal(document.getElementById('quickViewModal'));
+            
+            if (product) {
+                const content = `
+                    <div class="product-gallery">
+                        <img src="${product.querySelector('.product-image').src}" 
+                             alt="${product.querySelector('.product-name').textContent}" 
+                             class="product-image">
+                    </div>
+                    <div class="product-details">
+                        <h1 class="product-title">${product.querySelector('.product-name').textContent}</h1>
+                        <p class="product-description">${product.querySelector('.product-description').textContent}</p>
+                        
+                        <div class="price-section">
+                            <div class="price">
+                                ${product.querySelector('.product-price').innerHTML}
+                            </div>
+                        </div>
+
+                        <div class="quantity-section">
+                            <div class="quantity-title">Miktar Seçin</div>
+                            <div class="quantity-controls">
+                                <button type="button" class="quantity-btn" onclick="modalUpdateQuantity(${urunId}, -1)">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <span id="modal-quantity-${urunId}" class="quantity">1</span>
+                                <button type="button" class="quantity-btn" onclick="modalUpdateQuantity(${urunId}, 1)">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <button type="button" 
+                                class="add-to-cart-btn" 
+                                onclick="modalAddToCart(event, ${urunId})">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span>Sepete Ekle</span>
+                        </button>
+
+                        <div class="product-meta">
+                            <div class="meta-item">
+                                <div class="meta-icon">
+                                    <i class="fas fa-truck"></i>
+                                </div>
+                                <div class="meta-text">
+                                    <span class="meta-title">Ücretsiz Kargo</span>
+                                    <span class="meta-description">500₺ üzeri siparişlerde</span>
+                                </div>
+                            </div>
+                            <div class="meta-item">
+                                <div class="meta-icon">
+                                    <i class="fas fa-shield-alt"></i>
+                                </div>
+                                <div class="meta-text">
+                                    <span class="meta-title">Güvenli Ödeme</span>
+                                    <span class="meta-description">256-bit SSL koruması</span>
+                                </div>
+                            </div>
+                            <div class="meta-item">
+                                <div class="meta-icon">
+                                    <i class="fas fa-undo"></i>
+                                </div>
+                                <div class="meta-text">
+                                    <span class="meta-title">Kolay İade</span>
+                                    <span class="meta-description">14 gün içinde ücretsiz iade</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                document.querySelector('.quick-view-content').innerHTML = content;
+
+                // Modal açılış animasyonu
+                const modalDialog = document.querySelector('.quick-view-modal .modal-dialog');
+                modalDialog.style.transform = 'translateY(50px)';
+                
+                modal.show();
+                
+                // Modal açıldıktan sonra animasyon
+                setTimeout(() => {
+                    modalDialog.style.transform = 'translateY(0)';
+                }, 50);
+            }
+        }
+
+        // Modal içindeki miktar güncelleme fonksiyonu
+        function modalUpdateQuantity(urunId, change) {
+            const quantityElement = document.getElementById(`modal-quantity-${urunId}`);
+            let quantity = parseInt(quantityElement.textContent);
+            
+            // Animasyonlu güncelleme
+            quantityElement.style.transform = 'scale(0.8)';
+            setTimeout(() => {
+                quantity = Math.max(1, quantity + change); // Minimum 1 olacak şekilde güncelle
+                quantityElement.textContent = quantity;
+                quantityElement.style.transform = 'scale(1)';
+            }, 150);
+        }
+
+        // Modal içindeki sepete ekleme fonksiyonu
+        async function modalAddToCart(event, urunId) {
+            try {
+                const button = event.currentTarget;
+                const originalContent = button.innerHTML;
+                
+                // Yükleniyor animasyonu
+                button.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>Ekleniyor...</span>';
+                button.disabled = true;
+                
+                const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+                if (!token) {
+                    showNotification('Güvenlik tokeni bulunamadı. Sayfayı yenileyin.', 'error');
+                    return;
+                }
+
+                const quantityElement = document.getElementById(`modal-quantity-${urunId}`);
+                const miktar = parseInt(quantityElement.textContent);
+                if (isNaN(miktar) || miktar < 1) {
+                    showNotification('Geçersiz miktar', 'error');
+                    return;
+                }
+
+                const response = await fetch('/Sepet/SepeteEkle', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'RequestVerificationToken': token
+                    },
+                    body: JSON.stringify({
+                        urunId: urunId,
+                        miktar: miktar
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Başarılı ekleme animasyonu
+                    button.classList.add('success');
+                    button.innerHTML = '<i class="fas fa-check"></i><span>Sepete Eklendi</span>';
+                    
+                    showNotification('Ürün başarıyla sepete eklendi', 'success');
+                    await window.updateCartBadge();
+                    
+                    // Miktarı 1'e sıfırla
+                    quantityElement.textContent = '1';
+                    
+                    // 2 saniye sonra modalı kapat
+                    setTimeout(() => {
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('quickViewModal'));
+                        if (modal) {
+                            modal.hide();
+                        }
+                    }, 2000);
+                } else {
+                    if (data.message === "Oturum açmanız gerekiyor.") {
+                        window.location.href = '/Hesap/Giris';
+                    } else {
+                        showNotification(data.message || 'Bir hata oluştu', 'error');
+                        // Butonu eski haline getir
+                        button.innerHTML = originalContent;
+                    }
+                }
+            } catch (error) {
+                console.error('Sepete eklenirken bir hata oluştu:', error);
+                showNotification('Bir hata oluştu', 'error');
+            } finally {
+                button.disabled = false;
+            }
+        }
+
+        // Sepet sayısını güncelleme fonksiyonu
+        async function updateCartCount() {
+            try {
+                const response = await fetch('/Sepet/GetSepetUrunSayisi');
+                if (response.ok) {
+                    const count = await response.json();
+                    const cartCountElement = document.querySelector('.cart-count');
+                    if (cartCountElement) {
+                        cartCountElement.textContent = count;
+                    }
+                }
+            } catch (error) {
+                console.error('Sepet sayısı güncellenirken hata oluştu:', error);
+            }
+        }
+
+        // Normal görünümdeki miktar güncelleme fonksiyonu
+        function updateQuantity(urunId, change) {
+            const quantityElement = document.getElementById(`quantity-${urunId}`);
+            let quantity = parseInt(quantityElement.textContent);
+            
+            // Animasyonlu güncelleme
+            quantityElement.style.transform = 'scale(0.8)';
+            setTimeout(() => {
+                quantity = Math.max(1, quantity + change); // Minimum 1 olacak şekilde güncelle
+                quantityElement.textContent = quantity;
+                quantityElement.style.transform = 'scale(1)';
+            }, 150);
+        }
+
+        // Normal görünümdeki sepete ekleme fonksiyonu
+        async function addToCart(event, urunId) {
+            try {
+                const button = event.currentTarget;
+                const originalContent = button.innerHTML;
+                
+                // Yükleniyor animasyonu
+                button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                button.disabled = true;
+                
+                const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+                if (!token) {
+                    showNotification('Güvenlik tokeni bulunamadı. Sayfayı yenileyin.', 'error');
+                    return;
+                }
+
+                const quantityElement = document.getElementById(`quantity-${urunId}`);
+                const miktar = parseInt(quantityElement.textContent);
+                if (isNaN(miktar) || miktar < 1) {
+                    showNotification('Geçersiz miktar', 'error');
+                    return;
+                }
+
+                const response = await fetch('/Sepet/SepeteEkle', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'RequestVerificationToken': token
+                    },
+                    body: JSON.stringify({
+                        urunId: urunId,
+                        miktar: miktar
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Başarılı ekleme animasyonu
+                    button.classList.add('success');
+                    button.innerHTML = '<i class="fas fa-check"></i>';
+                    
+                    showNotification('Ürün başarıyla sepete eklendi', 'success');
+                    await window.updateCartBadge();
+                    
+                    // Miktarı 1'e sıfırla
+                    quantityElement.textContent = '1';
+                    
+                    // 1 saniye sonra butonu eski haline getir
+                    setTimeout(() => {
+                        button.classList.remove('success');
+                        button.innerHTML = originalContent;
+                        button.disabled = false;
+                    }, 1000);
+                } else {
+                    if (data.message === "Oturum açmanız gerekiyor.") {
+                        window.location.href = '/Hesap/Giris';
+                    } else {
+                        showNotification(data.message || 'Bir hata oluştu', 'error');
+                        // Butonu eski haline getir
+                        button.innerHTML = originalContent;
+                        button.disabled = false;
+                    }
+                }
+            } catch (error) {
+                console.error('Sepete eklenirken bir hata oluştu:', error);
+                showNotification('Bir hata oluştu', 'error');
+                button.innerHTML = originalContent;
+                button.disabled = false;
+            }
+        }
+    </script>
+}
+
+@section Styles {
+    <style>
+        .add-to-cart-btn {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: 50%;
+            background: var(--neon-primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .add-to-cart-btn i {
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .add-to-cart-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(99, 102, 241, 0.4);
+        }
+
+        .add-to-cart-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .add-to-cart-btn.success {
+            background: var(--neon-success);
+        }
+
+        .add-to-cart-btn.success i {
+            animation: checkmark 0.3s ease-in-out;
+        }
+
+        @@keyframes checkmark {
+            0% {
+                transform: scale(0);
+            }
+            50% {
+                transform: scale(1.2);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .slider-controls {
+            display: none;
+            pointer-events: none;
+        }
+
+        @@media (max-width: 768px) {
+            .slider-controls {
+                display: none;
+                pointer-events: none;
+            }
+        }
+    </style>
+}
