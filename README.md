@@ -153,11 +153,6 @@ _Kullanıcının Siparişi Onaylandıysa Hazırlanıyor Olarak Görür, Onaylanm
 
 ---
 
-## 📝 Lisans
-Bu proje [MIT Lisansı](LICENSE) altında lisanslanmıştır.
-
----
-
 ## 👥 Katkıda Bulunanlar
 [MURAT ÖZKOL]  
 [ALİ ŞEYHO]  
