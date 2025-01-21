@@ -105,11 +105,11 @@ _Kullanıcıyı Parallax Efektiyle Karşılayan Modern Bir Ana Sayfa._
 
 ### 2. Adım: Kayıt ve Giriş
 ![2. Adım Görseli](Peracraft/screens/2.png)
-_Kullanıcı Sepetine Ürün Yükleyebbilmek İçin Kayıt Olur ve Giriş Ekranına Yönlendirir._
+_Kullanıcı Sepetine Ürün Yükleyebilmek İçin Kayıt Olur ve Giriş Ekranına Yönlendirilir._
 
 ### 3. Adım: Ürün Kartları
 ![3. Adım Görseli](Peracraft/screens/3.png)
-_Ana Sayfada Ürünler Hakkında Detaylı Bilgi Alabilmesi Adına Hover Özelliği Olarak Hızlı Bakış Atabilir._
+_Ana Sayfada Ürünler Hakkında Detaylı Bilgi Alabilmesi Adına Hover Özelliği Olarak Hızlı Bakış Butonu._
 
 ### 4. Adım: Hızlı Bakış
 ![4. Adım Görseli](Peracraft/screens/4.png)
