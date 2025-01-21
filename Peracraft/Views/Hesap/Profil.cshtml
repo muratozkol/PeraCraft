@@ -1,0 +1,289 @@
+@model Peracraft.Models.Kullanici
+@{
+    ViewData["Title"] = "Profilim";
+}
+
+@section Styles {
+    <style>
+        .profile-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .profile-container h1 {
+            color: var(--text-color);
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .profile-form input:not([type="file"]),
+        .profile-form textarea {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .profile-form input:focus,
+        .profile-form textarea:focus {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--neon-primary);
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.25);
+        }
+
+        .profile-photo-container {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            margin: 0 auto;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid var(--neon-primary);
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.3);
+        }
+
+        .profile-photo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-photo-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .profile-photo-container:hover .profile-photo-overlay {
+            opacity: 1;
+        }
+
+        .photo-upload-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: white;
+            cursor: pointer;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .photo-upload-btn i {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 2rem;
+        }
+
+        .profile-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .btn-edit {
+            background: var(--neon-info);
+        }
+
+        .btn-save {
+            background: var(--neon-success);
+        }
+
+        .btn-delete {
+            background: var(--neon-danger);
+        }
+
+        .profile-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .profile-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .alert {
+            border-radius: 12px;
+            padding: 1rem;
+            margin-top: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--glass-border);
+        }
+
+        .alert-success {
+            background: rgba(16, 185, 129, 0.1);
+            border-color: var(--neon-success);
+            color: #10b981;
+        }
+
+        .alert-danger {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: var(--neon-danger);
+            color: #ef4444;
+        }
+    </style>
+}
+
+<div class="profile-container">
+    <h1>Profil Bilgilerim</h1>
+
+    <form asp-controller="Hesap" asp-action="ProfilGuncelle" method="post" enctype="multipart/form-data" class="profile-form">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="ProfilFotoUrl" />
+
+        <div class="row g-4">
+            <div class="col-12 text-center mb-4">
+                <div class="profile-photo-container">
+                    <img src="@(string.IsNullOrEmpty(Model.ProfilFotoUrl) ? "/img/default-profile.png" : Model.ProfilFotoUrl)" 
+                         alt="Profil Fotoğrafı" 
+                         class="profile-photo" 
+                         id="profilePhotoPreview">
+                    <div class="profile-photo-overlay">
+                        <label for="profilePhoto" class="photo-upload-btn">
+                            <i class="fas fa-camera"></i>
+                            <span>Fotoğraf Değiştir</span>
+                        </label>
+                        <input type="file" 
+                               id="profilePhoto" 
+                               name="profilePhoto" 
+                               accept="image/*" 
+                               class="d-none"
+                               onchange="previewImage(this)">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <input type="text" asp-for="Ad" placeholder="Adınız" required>
+            </div>
+
+            <div class="col-md-6">
+                <input type="text" asp-for="Soyad" placeholder="Soyadınız" required>
+            </div>
+
+            <div class="col-md-6">
+                <input type="email" asp-for="Eposta" placeholder="E-posta" required>
+            </div>
+
+            <div class="col-md-6">
+                <input type="tel" asp-for="Telefon" placeholder="Telefon">
+            </div>
+
+            <div class="col-12">
+                <textarea asp-for="Adres" placeholder="Adres" rows="3"></textarea>
+            </div>
+
+            <div class="col-12">
+                <input type="password" name="yeniSifre" id="yeniSifre" placeholder="Yeni Şifre (Değiştirmek istemiyorsanız boş bırakın)">
+            </div>
+
+            <div class="col-12">
+                <div class="profile-actions">
+                    <a href="@Url.Action("Index", "Adres")" class="profile-btn btn-edit">
+                        <i class="fas fa-map-marker-alt"></i>
+                        Adreslerim
+                    </a>
+                    <button type="button" class="profile-btn btn-delete" onclick="hesapSil()">
+                        <i class="fas fa-trash-alt"></i>
+                        Hesabı Sil
+                    </button>
+                    <button type="button" class="profile-btn btn-edit" onclick="duzenle()">
+                        <i class="fas fa-edit"></i>
+                        Düzenle
+                    </button>
+                    <button type="submit" class="profile-btn btn-save" id="kaydetBtn" disabled>
+                        <i class="fas fa-check"></i>
+                        Kaydet
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    @if (TempData["Basari"] != null)
+    {
+        <div class="alert alert-success mt-4">
+            @TempData["Basari"]
+        </div>
+    }
+
+    @if (TempData["Hata"] != null)
+    {
+        <div class="alert alert-danger mt-4">
+            @TempData["Hata"]
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        // Form elemanlarını başlangıçta devre dışı bırak
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('.profile-form');
+            const inputs = form.querySelectorAll('input:not([type="hidden"]):not([type="file"]), textarea');
+            inputs.forEach(input => input.disabled = true);
+        });
+
+        function duzenle() {
+            const form = document.querySelector('.profile-form');
+            const inputs = form.querySelectorAll('input:not([type="hidden"]):not([type="file"]), textarea');
+            const kaydetBtn = document.getElementById('kaydetBtn');
+            const photoUploadBtn = document.querySelector('.photo-upload-btn');
+
+            inputs.forEach(input => input.disabled = false);
+            kaydetBtn.disabled = false;
+            photoUploadBtn.style.display = 'flex';
+        }
+
+        function hesapSil() {
+            if (confirm('Hesabınızı silmek istediğinize emin misiniz? Bu işlem geri alınamaz!')) {
+                window.location.href = '/Hesap/HesapSil';
+            }
+        }
+
+        function previewImage(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    document.getElementById('profilePhotoPreview').src = e.target.result;
+                }
+                
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
+} 

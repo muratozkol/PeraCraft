@@ -1,0 +1,242 @@
+@model IEnumerable<Peracraft.Models.Siparis>
+
+@{
+    ViewData["Title"] = "Admin Paneli";
+    Layout = "_Layout";
+}
+
+<div class="container-fluid mt-5">
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800 fw-bold">
+            <i class="bi bi-grid-1x2-fill me-2"></i>Admin Paneli
+        </h1>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-0 shadow-sm h-100 py-2">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs fw-bold text-primary text-uppercase mb-1">Toplam Sipariş</div>
+                            <div class="h5 mb-0 fw-bold text-gray-800">@Model.Count()</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-cart-check fs-2 text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-0 shadow-sm h-100 py-2">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs fw-bold text-warning text-uppercase mb-1">Bekleyen Sipariş</div>
+                            <div class="h5 mb-0 fw-bold text-gray-800">@Model.Count(s => s.SiparisDurumu == "Beklemede")</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-clock-history fs-2 text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-0 shadow-sm h-100 py-2">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs fw-bold text-success text-uppercase mb-1">Tamamlanan Sipariş</div>
+                            <div class="h5 mb-0 fw-bold text-gray-800">@Model.Count(s => s.SiparisDurumu == "Onaylandı")</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-check-circle fs-2 text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-0 shadow-sm h-100 py-2">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs fw-bold text-danger text-uppercase mb-1">İptal Edilen</div>
+                            <div class="h5 mb-0 fw-bold text-gray-800">@Model.Count(s => s.SiparisDurumu == "İptal Edildi")</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-x-circle fs-2 text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-gradient text-white py-3" style="background: linear-gradient(45deg, #4e73df, #224abe);">
+            <h6 class="m-0 fw-bold">Sipariş Listesi</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="fw-bold">Sipariş Kodu</th>
+                            <th class="fw-bold">Müşteri</th>
+                            <th class="fw-bold">Tarih</th>
+                            <th class="fw-bold text-end">Tutar</th>
+                            <th class="fw-bold text-center">Durum</th>
+                            <th class="fw-bold text-end">İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var siparis in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <span class="fw-medium">#@siparis.SiparisKodu</span>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar-circle me-2">
+                                            @siparis.Kullanici.Ad.Substring(0,1)@siparis.Kullanici.Soyad.Substring(0,1)
+                                        </div>
+                                        <div>
+                                            <div class="fw-medium">@siparis.Kullanici.Ad @siparis.Kullanici.Soyad</div>
+                                            <div class="small text-muted">@siparis.TeslimatTelefonu</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>@siparis.SiparisTarihi.ToString("dd.MM.yyyy")</div>
+                                    <div class="small text-muted">@siparis.SiparisTarihi.ToString("HH:mm")</div>
+                                </td>
+                                <td class="text-end fw-bold">@siparis.ToplamTutar.ToString("C2")</td>
+                                <td class="text-center">
+                                    <div class="order-status-box @(siparis.SiparisDurumu.ToLower())">
+                                        <i class="bi @(siparis.SiparisDurumu == "Beklemede" ? "bi-hourglass-split" : 
+                                                    siparis.SiparisDurumu == "Onaylandı" ? "bi-box-seam" :
+                                                    siparis.SiparisDurumu == "İptal Edildi" ? "bi-x-circle" : "bi-circle")"></i>
+                                        <span>@(siparis.SiparisDurumu == "Onaylandı" ? "Hazırlanıyor" : siparis.SiparisDurumu)</span>
+                                    </div>
+                                </td>
+                                <td class="text-end">
+                                    <a href="@Url.Action("SiparisDetay", new { id = siparis.SiparisId })" 
+                                       class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-eye me-1"></i>Detay
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        body {
+            background-color: #f8f9fc;
+        }
+        .card {
+            border-radius: 0.5rem;
+        }
+        .table th {
+            font-weight: 600;
+            color: #4a5568;
+            white-space: nowrap;
+        }
+        .table td {
+            color: #2d3748;
+        }
+        .badge {
+            font-weight: 500;
+            padding: 0.5em 1em;
+        }
+        .text-gray-300 {
+            color: #dddfeb !important;
+        }
+        .text-gray-800 {
+            color: #5a5c69 !important;
+        }
+        .avatar-circle {
+            width: 40px;
+            height: 40px;
+            background-color: #4e73df;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .btn-outline-primary {
+            color: #4e73df;
+            border-color: #4e73df;
+        }
+        .btn-outline-primary:hover {
+            background-color: #4e73df;
+            border-color: #4e73df;
+            color: white;
+        }
+        .text-xs {
+            font-size: .7rem;
+        }
+        .table-hover tbody tr:hover {
+            background-color: rgba(78, 115, 223, 0.05);
+        }
+        .order-status-box {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            font-size: 0.875rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            min-width: 140px;
+            justify-content: center;
+        }
+        .order-status-box i {
+            font-size: 1rem;
+        }
+        .order-status-box.beklemede {
+            background: linear-gradient(145deg, #fff9e6, #fff5d6);
+            color: #997404;
+            border: 1px solid #ffeeba;
+        }
+        .order-status-box.onaylandı {
+            background: linear-gradient(145deg, #e8f5e9, #c8e6c9);
+            color: #1b5e20;
+            border: 1px solid #a5d6a7;
+        }
+        .order-status-box.iptal.edildi {
+            background: linear-gradient(145deg, #ffebee, #ffcdd2);
+            color: #b71c1c;
+            border: 1px solid #ef9a9a;
+        }
+        .order-status-box.beklemede i {
+            animation: pulse 2s infinite;
+        }
+        @@keyframes pulse {
+            0% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+    </style>
+} 

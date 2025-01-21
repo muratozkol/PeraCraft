@@ -1,0 +1,15 @@
+@model Peracraft.Models.Kullanici
+
+<div class="dropdown">
+    <button class="btn btn-outline-light user-btn" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="fas fa-user"></i>
+        <span>@(Model.Ad + " " + Model.Soyad)</span>
+        <i class="fas fa-chevron-down"></i>
+    </button>
+    <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="userDropdown">
+        <li><a class="dropdown-item" href="/Hesap/Profil"><i class="fas fa-user-circle me-2"></i>Profilim</a></li>
+        <li><a class="dropdown-item" href="/Hesap/Siparislerim"><i class="fas fa-box me-2"></i>Siparişlerim</a></li>
+        <li><hr class="dropdown-divider"></li>
+        <li><a class="dropdown-item text-danger" href="/Hesap/CikisYap"><i class="fas fa-sign-out-alt me-2"></i>Çıkış Yap</a></li>
+    </ul>
+</div> 
