@@ -1,8 +1,8 @@
 # Peracraft E-Ticaret Projesi
 
 ## 👥 Katkıda Bulunanlar
-[MURAT ÖZKOL]  
-[ALİ ŞEYHO]  
+[MURAT ÖZKOL 132230111]  
+[ALİ ŞEYHO 132130115]  
 
 ## 📋 Proje Özeti
 Peracraft, modern web teknolojileri kullanılarak geliştirilmiş kapsamlı bir e-ticaret platformudur. Kullanıcılar için kolay ve güvenli bir alışveriş deneyimi sunarken, yöneticiler için etkili bir yönetim paneli sağlar.
