@@ -6,6 +6,7 @@
 
 ## 📞 İletişim
 [murattozkol@gmail.com] Murat Özkol
+
 [132130115@ogr.uludag.edu.tr] Ali Şeyho 
 
 ## 📋 Proje Özeti
