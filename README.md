@@ -1,6 +1,7 @@
 # Peracraft E-Ticaret Projesi
-## Youtube Linki: https://www.youtube.com/watch?v=h99Jh-P5-NY
 ## Web Sitesini Buradan Ziyaret Edebilirsiniz: https://peracraft.com.tr
+## Youtube Linki: https://www.youtube.com/watch?v=h99Jh-P5-NY
+
 
 ## 👥 Katkıda Bulunanlar
 [MURAT ÖZKOL 132230111]  
